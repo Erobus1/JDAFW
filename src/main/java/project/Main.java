@@ -4,8 +4,10 @@ import project.bot.commands.builders.CommandArgument;
 import project.bot.commands.builders.SlashCommand;
 import project.bot.commands.impl.KickCommand;
 import project.bot.commands.impl.PingCommand;
+import project.bot.commands.impl.TestCommand;
 import project.bot.commands.impl.UserInfoCommand;
 import project.bot.commands.managers.SlashCommandManager;
+import project.bot.listeners.ButtonClickListener;
 import project.bot.listeners.SlashCommandListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -43,7 +45,8 @@ public class Main {
         cmdManager.register(
                 new PingCommand(),
                 new UserInfoCommand(),
-                new KickCommand()
+                new KickCommand(),
+                new TestCommand()
         );
         registerListeners();
         jda = builder.build();
@@ -52,7 +55,9 @@ public class Main {
     }
 
     private static void registerListeners() {
-        builder.addEventListeners(new SlashCommandListener());
+        builder.addEventListeners(
+                new SlashCommandListener(),
+                new ButtonClickListener());
     }
 
     private static void upsertCommands() throws InvalidTestGuildException {
