@@ -11,9 +11,13 @@ import project.bot.commands.builders.SlashCommand;
 public class UserInfoCommand extends SlashCommand {
     @Override
     public CommandData getCommandData() {
-        return new CommandData().name("user").description("Retrieve information about a user").args(new CommandArguments(
+        return new CommandData()
+                .name("user")
+                .description("Retrieve information about a user")
+                .args(new CommandArguments(
                 new CommandArgument("user", "User to get information of", false, OptionType.STRING)
-        )).testOnly(true);
+        ))
+                .testOnly(true);
     }
 
     @Override

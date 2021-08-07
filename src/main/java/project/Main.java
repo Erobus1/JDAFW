@@ -2,6 +2,7 @@ package project;
 
 import project.bot.commands.builders.CommandArgument;
 import project.bot.commands.builders.SlashCommand;
+import project.bot.commands.impl.KickCommand;
 import project.bot.commands.impl.PingCommand;
 import project.bot.commands.impl.UserInfoCommand;
 import project.bot.commands.managers.SlashCommandManager;
@@ -41,7 +42,8 @@ public class Main {
         cmdManager = new SlashCommandManager();
         cmdManager.register(
                 new PingCommand(),
-                new UserInfoCommand()
+                new UserInfoCommand(),
+                new KickCommand()
         );
         registerListeners();
         jda = builder.build();

@@ -13,6 +13,8 @@ public class SlashCommandListener extends ListenerAdapter {
     public void onSlashCommand(@NotNull SlashCommandEvent event) {
         SlashCommandManager manager = Main.getCmdManager();
         SlashCommand cmd = manager.getCommand(event.getName());
-        if (cmd != null) cmd.run(event);
+        if (cmd != null) manager.run(event, cmd);
     }
+
+
 }
