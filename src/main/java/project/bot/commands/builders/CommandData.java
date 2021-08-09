@@ -2,12 +2,17 @@ package project.bot.commands.builders;
 
 import project.sys.util.permission.Rank;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class CommandData {
     private String name;
     private String description;
     private CommandArguments args = new CommandArguments();
     private boolean testOnly = false;
     private Rank rank = Rank.NONE;
+    private List<SubCommandGroup> subCommandGroups;
+    private List<SubCommand> subCommands;
 
     public CommandData name(String name) {
         this.name = name.toLowerCase();
@@ -29,6 +34,14 @@ public class CommandData {
         this.rank = rank;
         return this;
     }
+    public CommandData subCommands(SubCommand... subCommands) {
+        this.subCommands = Arrays.asList(subCommands);
+        return this;
+    }
+    public CommandData subCommandGroups(SubCommandGroup... subCommandGroups) {
+        this.subCommandGroups = Arrays.asList(subCommandGroups);
+        return this;
+    }
 
     public String getName() {
         return name;
@@ -48,5 +61,13 @@ public class CommandData {
 
     public Rank getRank() {
         return rank;
+    }
+
+    public List<SubCommand> getSubCommands() {
+        return subCommands;
+    }
+
+    public List<SubCommandGroup> getSubCommandGroups() {
+        return subCommandGroups;
     }
 }

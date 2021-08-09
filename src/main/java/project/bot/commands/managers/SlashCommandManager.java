@@ -2,6 +2,8 @@ package project.bot.commands.managers;
 
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import project.bot.commands.builders.SlashCommand;
+import project.bot.commands.builders.SubCommand;
+import project.bot.commands.builders.SubCommandGroup;
 import project.sys.util.embeds.PresetBuilder;
 import project.sys.util.embeds.PresetType;
 import project.sys.util.permission.Rank;
@@ -31,19 +33,36 @@ public class SlashCommandManager {
     }
 
     public void run(SlashCommandEvent event, SlashCommand command) {
-        if (command.getCommandData().getRank() != Rank.NONE) {
-            if (!event.isFromGuild()) {
-                PresetBuilder builder = new PresetBuilder(PresetType.ERROR, "You can only use this command in a guild!", "Guild only");
-                event.replyEmbeds(builder.build()).setEphemeral(true).queue();
-                return;
-            }
-            Rank cmdRank = command.getCommandData().getRank();
-            if (!cmdRank.getCallback().hasPermission(event.getMember())) {
-                PresetBuilder builder = new PresetBuilder(PresetType.ERROR, "You need to have the following permission in order to use this command: `" + cmdRank.getName() + "`", "Insufficient permission!");
-                event.replyEmbeds(builder.build()).setEphemeral(true).queue();
-                return;
-            }
+        SlashCommand actualCommand;
+        if (event.getSubcommandGroup() != null) {
+            String subCmdGroupName = event.getSubcommandGroup();
+            SubCommandGroup subCmdGroup = command.getCommandData().getSubCommandGroups().stream().filter(e -> e.getName().equals(subCmdGroupName)).findFirst().get();
+            actualCommand = subCmdGroup.getSubCommands().stream().filter(s -> s.getCommandData().getName().equals(event.getSubcommandName())).findFirst().get();
+        } else if (event.getSubcommandName() != null) {
+            actualCommand = command.getCommandData().getSubCommands().stream().filter(s -> s.getCommandData().getName().equals(event.getSubcommandName())).findFirst().get();
+        } else {
+            actualCommand = command;
         }
-        command.run(event);
+
+        try {
+            filter(event, actualCommand);
+        } catch (Exception e) {
+            PresetBuilder builder = new PresetBuilder(PresetType.ERROR, e.getMessage());
+            event.replyEmbeds(builder.build()).setEphemeral(true).queue();
+            return;
+        }
+
+        actualCommand.run(event);
+
+    }
+
+    private static void filter(SlashCommandEvent event, SlashCommand command) throws Exception {
+
+        if (command.getCommandData().getRank() != Rank.NONE) {
+            if (!event.isFromGuild()) throw new Exception("You can only use this command in a guild!");
+            Rank cmdRank = command.getCommandData().getRank();
+            if (!cmdRank.getCallback().hasPermission(event.getMember())) throw new Exception("You need to have the following permission in order to use this command: `\" + cmdRank.getName() + \"`");
+        }
+
     }
 }

@@ -7,9 +7,6 @@ import project.bot.commands.builders.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import project.sys.util.embeds.PresetBuilder;
 import project.sys.util.embeds.PresetType;
-import project.sys.util.permission.Rank;
-
-import java.util.concurrent.TimeUnit;
 
 public class PingCommand extends SlashCommand {
     @Override
