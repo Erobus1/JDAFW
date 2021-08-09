@@ -56,9 +56,9 @@ public class SlashCommandManager {
         try {
             actualCommand.run(event);
         } catch (Throwable e) {
-            errorBuilder.setDescription(e.getMessage());
+            errorBuilder.setDescription("```"+e.getMessage()+"```");
             if (!event.isAcknowledged()) {
-                event.replyEmbeds(errorBuilder.build()).queue();
+                event.replyEmbeds(errorBuilder.build()).setEphemeral(true).queue();
             } else {
                 event.getHook().editOriginalEmbeds(errorBuilder.build()).queue();
             }
