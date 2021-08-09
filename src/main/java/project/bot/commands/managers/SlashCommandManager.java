@@ -52,8 +52,17 @@ public class SlashCommandManager {
             return;
         }
 
-        actualCommand.run(event);
-
+        PresetBuilder errorBuilder = new PresetBuilder(PresetType.ERROR, "errormsg", "Something went wrong...");
+        try {
+            actualCommand.run(event);
+        } catch (Throwable e) {
+            errorBuilder.setDescription(e.getMessage());
+            if (!event.isAcknowledged()) {
+                event.replyEmbeds(errorBuilder.build()).queue();
+            } else {
+                event.getHook().editOriginalEmbeds(errorBuilder.build()).queue();
+            }
+        }
     }
 
     private static void filter(SlashCommandEvent event, SlashCommand command) throws Exception {
